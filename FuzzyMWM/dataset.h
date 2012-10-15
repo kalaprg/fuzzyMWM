@@ -19,7 +19,7 @@ public:
         QVector<float> &attributeValues;
         int classID;
     };
-
+    DataSet();
     DataSet(QString &filename);
     DataSet(int numOfInfoAttributes, const QList<QString> &attributeNames);
     int getNumberOfAttributes() const;

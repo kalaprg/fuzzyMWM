@@ -7,6 +7,7 @@
 class FuzzyInferenceEngine
 {
 public:
+    FuzzyInferenceEngine();
     FuzzyInferenceEngine(const RuleBase &rule_base);
     int inferClass(const QVector<float> &input) const;
     float testPerformance(const DataSet &testDataSet) const;
