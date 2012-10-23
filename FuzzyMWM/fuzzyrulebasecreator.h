@@ -1,6 +1,7 @@
 #ifndef FUZZYRULEBASECREATOR_H
 #define FUZZYRULEBASECREATOR_H
 #include "fuzzyset.h"
+#include "dataset.h"
 #include "rulebase.h"
 
 class FuzzyRuleBaseCreator
