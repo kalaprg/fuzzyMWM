@@ -4,7 +4,7 @@
 class FuzzySet
 {
 public:
-    FuzzySet() {}
+    FuzzySet();
     virtual ~FuzzySet() {}
     virtual FuzzySet &getInstance() const = 0;
     virtual FuzzySet &operator=(FuzzySet &rhs) = 0;

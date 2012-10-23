@@ -21,9 +21,9 @@ public:
         std::vector<float> attributeValues;
         int classID;
     };
-
     DataSet(const std::string &filename);
     DataSet(const std::list<std::string> &attributeNames);
+
     int getNumberOfAttributes() const;
     AtrributeInfo getAttributeInfo(int attrID) const;
     int getNumberOfInstances() const;
