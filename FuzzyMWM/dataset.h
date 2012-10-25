@@ -22,13 +22,13 @@ public:
         int classID;
     };
     DataSet(const std::string &filename);
-    DataSet(const std::list<std::string> &attributeNames);
+    DataSet(const std::list<std::string> &attributeNames = std::list<std::string>());
 
     int getNumberOfAttributes() const;
     AtrributeInfo getAttributeInfo(int attrID) const;
     int getNumberOfInstances() const;
     int getNumberOfClasses() const;
-    int addInstance(const std::vector<float> &attributes, int classID);
+    int addInstance(const DataInstance &instance);
     void getInstance(int instanceID, DataInstance &outInstance) const;
     void getTrainingAndTestSets(float percentage, DataSet &outTrainingData, DataSet &outTestData) const;
     //optional
@@ -36,6 +36,7 @@ public:
     float measureIntraClassCorrelation();
 
 private:
+    const DataInstance &getInstance(int instanceID) const;
     std::vector<DataSet::AtrributeInfo> attributes_;
     DataSet::AtrributeInfo classAttribute_;
     std::string title_;

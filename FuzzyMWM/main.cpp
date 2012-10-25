@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
             std::vector<float> attrs(2);
             attrs[0] = randFloat(1.0f, 1.5f);
             attrs[1] = randFloat(.1f, .4f);
-            test.addInstance(attrs, 0);
+            test.addInstance(DataSet::DataInstance(attrs, 0));
         }
         if(i % 4 == 1)
         {
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
             std::vector<float> attrs(2);
             attrs[0] = randFloat(.5f, 1.1f);
             attrs[1] = randFloat(0.0f, 0.1f);
-            test.addInstance(attrs, 1);
+            test.addInstance(DataSet::DataInstance(attrs, 1));
         }
         if(i % 4 == 2)
         {
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
             std::vector<float> attrs(2);
             attrs[0] = randFloat(1.5f, 2.0f);
             attrs[1] = randFloat(.3f, .8f);
-            test.addInstance(attrs, 2);
+            test.addInstance(DataSet::DataInstance(attrs, 2));
         }
         if(i % 4 == 3)
         {
@@ -51,10 +51,13 @@ int main(int argc, char *argv[])
             std::vector<float> attrs(2);
             attrs[0] = randFloat(0.0f, 0.8f);
             attrs[1] = randFloat(.3f, .9f);
-            test.addInstance(attrs, 3);
+            test.addInstance(DataSet::DataInstance(attrs, 3));
         }
     }
     
+    DataSet trainingData, testData;
+    test.getTrainingAndTestSets(0.1, trainingData, testData);
+
     QTimer::singleShot(0, &a, SLOT(quit()));
     return a.exec();
 }

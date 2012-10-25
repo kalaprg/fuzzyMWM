@@ -236,22 +236,27 @@ int DataSet::getNumberOfClasses() const
     return -1;
 }
 
-int DataSet::addInstance(const std::vector<float> &attributes, int classID)
+int DataSet::addInstance(const DataInstance &instance)
 {
-    if(attributes.size() != attributes_.size())
+    if(instance.attributeValues.size() != attributes_.size())
         throw std::logic_error("Wrong number of attributes");
 
-    DataInstance inst(attributes, classID);
-    instances_.push_back(inst);
+    instances_.push_back(instance);
     for(int i = 0; i < (int)attributes_.size(); ++i)
     {
-        attributes_[i].min_value = std::min(attributes_[i].min_value, attributes[i]);
-        attributes_[i].max_value = std::max(attributes_[i].max_value, attributes[i]);
+        attributes_[i].min_value = std::min(attributes_[i].min_value, instance.attributeValues[i]);
+        attributes_[i].max_value = std::max(attributes_[i].max_value, instance.attributeValues[i]);
     }
     return instances_.size() - 1;
 }
 
 void DataSet::getInstance(int instanceID, DataSet::DataInstance &outInstance) const
+{
+    outInstance = getInstance(instanceID);
+}
+
+
+const DataSet::DataInstance &DataSet::getInstance(int instanceID) const
 {
     if(instanceID < 0 || instanceID >= (int)instances_.size())
     {
@@ -260,7 +265,7 @@ void DataSet::getInstance(int instanceID, DataSet::DataInstance &outInstance) co
         throw std::out_of_range(tmp.str());
     }
 
-    outInstance = instances_[instanceID];
+    return instances_[instanceID];
 }
 
 void DataSet::getTrainingAndTestSets(float percentage, DataSet &outTrainingData, DataSet &outTestData) const
@@ -313,14 +318,21 @@ void DataSet::getTrainingAndTestSets(float percentage, DataSet &outTrainingData,
         it->second *= percentage;
 
     std::vector<int> indices(instances_.size());
-    for(int i = 0; i < indices.size(); ++i)
+    for(int i = 0; i < (int) indices.size(); ++i)
         indices[i] = i;
 
     std::random_shuffle(indices.begin(), indices.end());
 
     for(int i = 0; i < (int) indices.size(); ++i)
     {
-        DataInstance inst;
-       // if()
+        const DataInstance &inst = getInstance(indices[i]);
+        Map::iterator it = classCounter.find(inst.classID);
+        if(it->second > 0)
+        {
+            outTrainingData.addInstance(inst);
+            --(it->second);
+        }
+        else
+            outTestData.addInstance(inst);
     }
 }
