@@ -6,8 +6,8 @@ class FuzzySet
 public:
     FuzzySet();
     virtual ~FuzzySet() {}
-    virtual FuzzySet &getInstance() const = 0;
-    virtual FuzzySet &operator=(FuzzySet &rhs) = 0;
+    virtual FuzzySet *getInstance() const = 0;
+    virtual FuzzySet &operator=(const FuzzySet &rhs) = 0;
 };
 
 #endif // FUZZYSET_H
