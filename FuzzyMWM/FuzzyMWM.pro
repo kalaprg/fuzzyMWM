@@ -16,12 +16,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    fuzzyset.cpp \
     fuzzyinferenceengine.cpp \
     rulebase.cpp \
     dataset.cpp \
     fuzzyrulebasecreator.cpp \
-    fuzzysetcontainer.cpp
+    fuzzysetcontainer.cpp \
+    triangularfuzzyset.cpp
 
 HEADERS += \
     fuzzyset.h \
@@ -29,4 +29,5 @@ HEADERS += \
     rulebase.h \
     dataset.h \
     fuzzyrulebasecreator.h \
-    fuzzysetcontainer.h
+    fuzzysetcontainer.h \
+    triangularfuzzyset.h

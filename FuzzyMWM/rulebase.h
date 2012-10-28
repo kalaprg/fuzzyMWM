@@ -47,8 +47,8 @@ public:
             return *this;
         }
 
-        const FuzzySetContainer &getPremises() { return premises_; }
-        const FuzzySet &getConclusion() { return *conclusion_; }
+        const FuzzySetContainer &getPremises() const { return premises_; }
+        const FuzzySet &getConclusion() const { return *conclusion_; }
     private:
         FuzzySetContainer premises_;
         FuzzySet *conclusion_;
