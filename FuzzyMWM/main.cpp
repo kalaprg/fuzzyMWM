@@ -2,7 +2,11 @@
 #include <QTimer>
 #include <list>
 #include <string>
+#include <iostream>
 #include "dataset.h"
+#include "rulebase.h"
+#include "fuzzyinferenceengine.h"
+#include "triangularfuzzyset.h"
 
 float randFloat(float a, float b)
 {
@@ -57,6 +61,39 @@ int main(int argc, char *argv[])
     
     DataSet trainingData, testData;
     test.getTrainingAndTestSets(0.1, trainingData, testData);
+
+    RuleBase testRuleBase;
+    {//jabłko
+        FuzzySetContainer premises;
+        premises.insert(TriangularFuzzySet(1.0, 1.25, 1.5), 0);
+        premises.insert(TriangularFuzzySet(1.0, 1.25, 1.5), 1);
+        testRuleBase.addRule(RuleBase::Rule(premises, TriangularFuzzySet(-0.1,0,0.1)));
+    }
+    {//banan
+        FuzzySetContainer premises;
+        premises.insert(TriangularFuzzySet(0.5, 1.0, 1.1), 0);
+        premises.insert(TriangularFuzzySet(0.0, 0.05, 0.1), 1);
+        testRuleBase.addRule(RuleBase::Rule(premises, TriangularFuzzySet(0.9,1,1.1)));
+    }
+    {//kiwi
+        FuzzySetContainer premises;
+        premises.insert(TriangularFuzzySet(1.5, 1.75, 2.0), 0);
+        premises.insert(TriangularFuzzySet(0.3, 0.5, 0.8), 1);
+        testRuleBase.addRule(RuleBase::Rule(premises, TriangularFuzzySet(1.9,2,2.1)));
+    }
+    {//ananas
+        FuzzySetContainer premises;
+        premises.insert(TriangularFuzzySet(0.0, 0.6, 0.8), 0);
+        premises.insert(TriangularFuzzySet(0.3, 0.6, 0.9), 1);
+        testRuleBase.addRule(RuleBase::Rule(premises, TriangularFuzzySet(2.9,3,3.1)));
+    }
+
+    FuzzyInferenceEngine engine(testRuleBase);
+    engine.init();
+    float perf = engine.testPerformance(trainingData);
+    std::cout<<"Performance on training data: "<<perf*100.0f<<'%'<<std::endl;
+    perf = engine.testPerformance(testData);
+    std::cout<<"Performance on test data: "<<perf*100.0f<<'%'<<std::endl;
 
     QTimer::singleShot(0, &a, SLOT(quit()));
     return a.exec();

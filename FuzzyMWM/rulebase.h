@@ -4,6 +4,7 @@
 #include <fuzzyset.h>
 #include <fuzzysetcontainer.h>
 #include <cstring>
+#include <QDebug>
 
 class RuleBase
 {
@@ -16,22 +17,33 @@ public:
         Rule(const FuzzySetContainer &premises, const FuzzySet &conclusion)
             : premises_(premises), conclusion_(conclusion.getInstance())
         {
-            *conclusion_ = conclusion;
+            if(conclusion_)
+            {
+                *conclusion_ = conclusion;
+            }
+            else
+                conclusion_ = 0;
         }
 
         Rule(const Rule &r)
         {
-            if(conclusion_)
-                delete conclusion_;
             premises_ = r.premises_;
-            conclusion_ = r.conclusion_->getInstance();
-            *conclusion_ = *r.conclusion_;
+            if(r.conclusion_)
+            {
+                conclusion_ = r.conclusion_->getInstance();
+                *conclusion_ = *r.conclusion_;
+            }
+            else
+                conclusion_ = 0;
         }
 
         ~Rule()
         {
             if(conclusion_)
+            {
                 delete conclusion_;
+                conclusion_ = 0;
+            }
         }
 
         Rule &operator = (const Rule &rhs)

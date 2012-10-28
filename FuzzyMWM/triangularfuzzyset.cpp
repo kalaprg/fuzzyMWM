@@ -40,8 +40,9 @@ float TriangularFuzzySet::getMi(float x) const
 
     if(x <= a_ || x > c_)
         return 0;
+
     else if(x <= b_)
         return (x - a_) / (b_ - a_);
     else
-        return (x - c_) / (c_ - b_);
+        return (c_ - x) / (c_ - b_);
 }
