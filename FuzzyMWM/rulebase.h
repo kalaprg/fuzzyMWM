@@ -59,6 +59,8 @@ public:
             return *this;
         }
 
+        std::string toString() const;
+
         const FuzzySetContainer &getPremises() const { return premises_; }
         const FuzzySet &getConclusion() const { return *conclusion_; }
     private:

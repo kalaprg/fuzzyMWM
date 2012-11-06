@@ -1,3 +1,4 @@
+#include <sstream>
 #include "rulebase.h"
 
 
@@ -14,4 +15,16 @@ const RuleBase::Rule &RuleBase::getRule(int ruleID) const
 size_t RuleBase::getNumberOfRules() const
 {
     return rules_.size();
+}
+
+std::string RuleBase::Rule::toString() const
+{
+    std::stringstream stream;
+    stream << "IF";
+    for(int i = 0; i < (int) premises_.size(); ++i)
+    {
+        stream << " " << premises_.getFuzzySet(i).toString();
+    }
+    stream << " THEN " << conclusion_->toString();
+    return stream.str();
 }

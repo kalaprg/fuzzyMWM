@@ -13,6 +13,11 @@ FuzzySetContainer::FuzzySetContainer(const FuzzySetContainer &c)
     }
 }
 
+FuzzySetContainer::FuzzySetContainer(const size_t size)
+{
+    sets_.resize(size, 0);
+}
+
 FuzzySetContainer::~FuzzySetContainer()
 {
     freeContainer();
@@ -39,14 +44,40 @@ size_t FuzzySetContainer::size() const
     return sets_.size();
 }
 
-FuzzySet &FuzzySetContainer::operator [](int index)
+void FuzzySetContainer::resize(size_t newSize, const FuzzySet &value)
+{
+    resize(newSize, &value);
+}
+
+void FuzzySetContainer::resize(size_t newSize)
+{
+    resize(newSize, 0);
+}
+
+const FuzzySet &FuzzySetContainer::getFuzzySet(int index) const
 {
     return *sets_[index];
 }
 
-const FuzzySet &FuzzySetContainer::operator [](int index) const
+void FuzzySetContainer::setFuzzySet(int index, FuzzySet *fset)
 {
-    return *sets_[index];
+    if(sets_[index])
+    {
+        delete sets_[index];
+        sets_[index] = 0;
+    }
+    sets_[index] = fset;
+}
+
+void FuzzySetContainer::setFuzzySet(int index, const FuzzySet &fset)
+{
+    if(sets_[index])
+    {
+        delete sets_[index];
+        sets_[index] = 0;
+    }
+    sets_[index] = fset.getInstance();
+    *sets_[index] = fset;
 }
 
 int FuzzySetContainer::insert(const FuzzySet &item, int position)
@@ -59,9 +90,44 @@ int FuzzySetContainer::insert(const FuzzySet &item, int position)
     return it - sets_.begin();
 }
 
+int FuzzySetContainer::insert(FuzzySet *item, int position)
+{
+    position = std::min(std::max(0, position), (int)sets_.size());
+    std::vector<FuzzySet*>::iterator it = sets_.insert(sets_.begin() + position,
+                                                       item);
+    return it - sets_.begin();
+}
+
 void FuzzySetContainer::remove(int position)
 {
+    delete *(sets_.begin() + position);
     sets_.erase(sets_.begin() + position);
+}
+
+void FuzzySetContainer::resize(size_t newSize, const FuzzySet *value)
+{
+    size_t oldSize = sets_.size();
+    if(oldSize > newSize)
+    {
+        for(std::vector<FuzzySet*>::iterator it = sets_.begin() + newSize;
+            it != sets_.end(); ++it)
+        {
+            if(*it)
+                delete *it;
+        }
+    }
+    sets_.resize(newSize, 0);
+    if(oldSize < newSize)
+    {
+        for(std::vector<FuzzySet*>::iterator it = sets_.begin() + oldSize;
+            it != sets_.end(); ++it)
+        {
+            if(value)
+                *it = value->getInstance();
+            else
+                *it = 0;
+        }
+    }
 }
 
 void FuzzySetContainer::freeContainer()

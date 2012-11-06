@@ -1,7 +1,8 @@
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 #include "fuzzyinferenceengine.h"
-const float FuzzyInferenceEngine::delta_ = 0.0001;
+const float FuzzyInferenceEngine::delta_ = 0.000001;
 
 FuzzyInferenceEngine::FuzzyInferenceEngine(const RuleBase &rule_base)
     : ruleBase_(rule_base), areasAndMassCenters_(rule_base.getNumberOfRules()),
@@ -46,7 +47,7 @@ int FuzzyInferenceEngine::inferClass(const std::vector<float> &input) const
         int numPremises = premises.size();
         for(int k = 0; k < numPremises; ++k)
         {
-            ruleSupport *= premises[k].getMi(input[k]);
+            ruleSupport *= premises.getFuzzySet(k).getMi(input[k]);
         }
         float area = areasAndMassCenters_[i].first;
         float massCenter = areasAndMassCenters_[i].second;
@@ -68,6 +69,7 @@ float FuzzyInferenceEngine::testPerformance(const DataSet &testDataSet) const
     {
         DataSet::DataInstance inst;
         testDataSet.getInstance(i, inst);
+
         int outputClass = inferClass(inst.attributeValues);
         if(outputClass == inst.classID)
             ++good;

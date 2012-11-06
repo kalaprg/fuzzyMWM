@@ -26,14 +26,11 @@ public:
 
     int getNumberOfAttributes() const;
     AtrributeInfo getAttributeInfo(int attrID) const;
+    AtrributeInfo getClassAttributeInfo() const;
     int getNumberOfInstances() const;
-    int getNumberOfClasses() const;
     int addInstance(const DataInstance &instance);
     void getInstance(int instanceID, DataInstance &outInstance) const;
     void getTrainingAndTestSets(float percentage, DataSet &outTrainingData, DataSet &outTestData) const;
-    //optional
-    float measureInterClassCorrelation();
-    float measureIntraClassCorrelation();
 
 private:
     const DataInstance &getInstance(int instanceID) const;

@@ -213,7 +213,7 @@ int DataSet::getNumberOfAttributes() const
 
 DataSet::AtrributeInfo DataSet::getAttributeInfo(int attrID) const
 {
-    if(attrID > 0 && attrID < (int)attributes_.size())
+    if(attrID >= 0 && attrID < (int)attributes_.size())
     {
         return attributes_[attrID];
     }
@@ -225,15 +225,14 @@ DataSet::AtrributeInfo DataSet::getAttributeInfo(int attrID) const
     }
 }
 
+DataSet::AtrributeInfo DataSet::getClassAttributeInfo() const
+{
+    return classAttribute_;
+}
+
 int DataSet::getNumberOfInstances() const
 {
     return instances_.size();
-}
-
-int DataSet::getNumberOfClasses() const
-{
-    BOOST_ASSERT_MSG(false, "not implemented yet!");
-    return -1;
 }
 
 int DataSet::addInstance(const DataInstance &instance)
@@ -247,6 +246,8 @@ int DataSet::addInstance(const DataInstance &instance)
         attributes_[i].min_value = std::min(attributes_[i].min_value, instance.attributeValues[i]);
         attributes_[i].max_value = std::max(attributes_[i].max_value, instance.attributeValues[i]);
     }
+    classAttribute_.min_value = std::min(classAttribute_.min_value, (float)instance.classID);
+    classAttribute_.max_value = std::max(classAttribute_.max_value, (float)instance.classID);
     return instances_.size() - 1;
 }
 
@@ -291,15 +292,17 @@ void DataSet::getTrainingAndTestSets(float percentage, DataSet &outTrainingData,
     outTestData.attributes_.clear();
     outTrainingData.attributes_.clear();
 
-    for(int i = 0; i < (int) attributes_.size(); ++i)
-    {
-        DataSet::AtrributeInfo info;
-        info.name = attributes_[i].name;
-        info.min_value = std::numeric_limits<float>::max();
-        info.max_value = -std::numeric_limits<float>::max();
-        outTestData.attributes_.push_back(info);
-        outTrainingData.attributes_.push_back(info);
-    }
+//    for(int i = 0; i < (int) attributes_.size(); ++i)
+//    {
+//        DataSet::AtrributeInfo info;
+//        info.name = attributes_[i].name;
+//        info.min_value = std::numeric_limits<float>::max();
+//        info.max_value = -std::numeric_limits<float>::max();
+//        outTestData.attributes_.push_back(info);
+//        outTrainingData.attributes_.push_back(info);
+//    }
+    outTestData.attributes_ = attributes_;
+    outTrainingData.attributes_ = attributes_;
 
     Map classCounter;
     for(int i = 0; i < (int)instances_.size(); ++i)
